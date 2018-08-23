@@ -1,6 +1,7 @@
 var board = ChessBoard('board', {
     draggable: true,
     onDrop: piece_moved,
+    onDragStart: drag_start,
     showNotation: false,
 });
 
@@ -8,6 +9,7 @@ var other = { 'w': 'b', 'b': 'w' };
 var player = { 'w':'white', 'b':'black' };
 var turn;
 var startedwith;
+var autosolving = false;
 
 function init_puzzle() {
     var pieces = "KkQqRRrrBBbbNNnn".split("");
@@ -111,7 +113,12 @@ function solve() {
         return;
     }
 
+    $('#solve').prop('disabled', true);
+    $('#init').prop('disabled', true);
+    $('#reset').prop('disabled', true);
     $('#whatdo').html("&nbsp;");
+
+    autosolving = true;
 
     window.setTimeout(function() {
         showNextMove(r.moves);
@@ -127,6 +134,10 @@ function showNextMove(moves) {
         }, 500);
     } else {
         render();
+        $('#solve').prop('disabled', false);
+        $('#init').prop('disabled', false);
+        $('#reset').prop('disabled', false);
+        autosolving = false;
     }
 }
 
@@ -140,6 +151,20 @@ function completed(pos) {
         return true;
     else
         return false;
+}
+
+function drag_start(from, to, pos, orientation) {
+    // can't move anything while playing the auto-solve animation
+    if (autosolving)
+        return false;
+
+    // can't move the wrong coloured pieces
+    var piece = pos[from];
+    colour = piece.charAt(0);
+    if (colour != turn)
+        return false;
+
+    return true;
 }
 
 function piece_moved(from, to, piece, newpos, oldpos, orientation) {
