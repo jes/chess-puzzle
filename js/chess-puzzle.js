@@ -7,6 +7,7 @@ var board = ChessBoard('board', {
 var other = { 'w': 'b', 'b': 'w' };
 var player = { 'w':'white', 'b':'black' };
 var turn;
+var startedwith;
 
 function init_puzzle() {
     var pieces = "KkQqRRrrBBbbNNnn".split("");
@@ -17,13 +18,18 @@ function init_puzzle() {
             fen += '/';
         fen += pieces[i];
     }
+    startedwith = fen;
     board.position(fen);
     turn = 'w';
     render();
 }
 
 function render() {
-    $('#whatdo').text("Move a " + player[turn] + " piece.");
+    if (completed(board.position())) {
+        $('#whatdo').text("Puzzle solved!")
+    } else {
+        $('#whatdo').text("Move a " + player[turn] + " piece.");
+    }
 }
 
 // https://stackoverflow.com/a/6274398
@@ -101,9 +107,11 @@ function dfs(position) {
 function solve() {
     var r = dfs(board.position());
     if (!r.solved) {
-        alert("Not solvable!");
+        $('#whatdo').text("Not solvable!");
         return;
     }
+
+    $('#whatdo').html("&nbsp;");
 
     window.setTimeout(function() {
         showNextMove(r.moves);
@@ -111,11 +119,15 @@ function solve() {
 }
 
 function showNextMove(moves) {
-    var m = moves.shift();
-    board.move(m);
-    window.setTimeout(function() {
-        showNextMove(moves);
-    }, 500);
+    if (moves.length > 0) {
+        var m = moves.shift();
+        board.move(m);
+        window.setTimeout(function() {
+            showNextMove(moves);
+        }, 500);
+    } else {
+        render();
+    }
 }
 
 function completed(pos) {
@@ -227,8 +239,14 @@ $('#solve').click(function() {
     solve();
 });
 
-$('#reset').click(function() {
+$('#init').click(function() {
     init_puzzle();
+});
+
+$('#reset').click(function() {
+    board.position(startedwith);
+    turn = 'w';
+    render();
 });
 
 init_puzzle();
