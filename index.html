@@ -9,12 +9,16 @@
     <div class="container">
         <h1 style="margin-top: 20px">Chess puzzle</h1>
 
-        <button class="btn btn-primary" id="solve">Auto-solve</button>
-        <button class="btn btn-danger" id="reset">Reset</button>
-
         <div style="clear:both"></div>
 
-        <div id="board" style="float:left; width: 300px; margin-top: 2px; margin-right: 20px"></div>
+        <div style="float:left; border-right: solid 1px #ccc; padding-right: 5px; margin-right: 20px">
+            <button class="btn btn-primary" id="solve">Auto-solve</button>
+            <button class="btn btn-danger" id="reset">Reset</button>
+
+            <div id="board" style="width: 300px; margin-top: 2px;"></div>
+            <span id="whatdo"></span>
+        </div>
+
         <div>
             <p>This is a single-player puzzle derived from the rules of chess, played on a 4x4 board. Starting with white,
             play alternates between moving a white and then a black piece. Every move must capture

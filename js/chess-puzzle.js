@@ -5,6 +5,7 @@ var board = ChessBoard('board', {
 });
 
 var other = { 'w': 'b', 'b': 'w' };
+var player = { 'w':'white', 'b':'black' };
 var turn;
 
 function init_puzzle() {
@@ -18,6 +19,11 @@ function init_puzzle() {
     }
     board.position(fen);
     turn = 'w';
+    render();
+}
+
+function render() {
+    $('#whatdo').text("Move a " + player[turn] + " piece.");
 }
 
 // https://stackoverflow.com/a/6274398
@@ -130,6 +136,7 @@ function piece_moved(from, to, piece, newpos, oldpos, orientation) {
 
     // other colour's turn now
     turn = other[turn];
+    render();
 }
 
 function legal_move(position, from, to) {
