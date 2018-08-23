@@ -1,6 +1,7 @@
 var board = ChessBoard('board', {
     draggable: true,
     onDrop: piece_moved,
+    showNotation: false,
 });
 
 var other = { 'w': 'b', 'b': 'w' };

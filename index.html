@@ -6,12 +6,31 @@
     <link rel="stylesheet" type="text/css" href="css/chessboard-0.3.0.min.css">
 </head>
 <body>
-    <h1>Chess puzzle</h1>
+    <div class="container">
+        <h1 style="margin-top: 20px">Chess puzzle</h1>
 
-    <button id="solve">Auto-solve</button>
-    <button id="reset">Reset</button>
+        <button class="btn btn-primary" id="solve">Auto-solve</button>
+        <button class="btn btn-danger" id="reset">Reset</button>
 
-    <div id="board" style="width: 300px"></div>
+        <div style="clear:both"></div>
+
+        <div id="board" style="float:left; width: 300px; margin-top: 2px; margin-right: 20px"></div>
+        <div>
+            <p>This is a single-player puzzle derived from the rules of chess, played on a 4x4 board. Starting with white,
+            play alternates between moving a white and then a black piece. Every move must capture
+            a piece of the opposing colour. Pieces move just like in chess, but there is no
+            check. To successfully solve the puzzle, capture every piece leaving behind
+            only the white king.</p>
+            <p>The initial configuration is a random permutation of the 16 pieces of a normal
+            chess set, with pawns excluded.</p>
+            <p>Open questions include: What is the total number of unique starting positions? Is every starting position solvable? If not, what proportion are solvable? Is there a quick way to prove whether a position is solvable without actually solving it? Is there a deterministic solving algorithm that doesn't need any brute force search?</p>
+        </div>
+
+        <div style="clear:both"></div>
+
+        <hr>
+        <p>By <a href="https://incoherency.co.uk/">James Stanley</a>.</p>
+    </div>
 
     <script type="text/javascript" src="js/jquery-3.3.1.min.js"></script>
     <script type="text/javascript" src="js/bootstrap.min.js"></script>
