@@ -12,26 +12,41 @@ function init_puzzle() {
 }
 
 function piece_moved(from, to, piece, newpos, oldpos, orientation) {
-    var colour = piece.charAt(0);
-    var piece = piece.charAt(1);
+    if (!legal_move(oldpos, from, to))
+        return 'snapback';
+
+    // other colour's turn now
+    turn = other[turn];
+
+    // TODO: detect end of game (either white king is the only piece, or there are no legal
+    // moves)
+}
+
+function legal_move(position, from, to) {
+    if (!(from in position))
+        return false;
+
+    var piece = position[from];
+    colour = piece.charAt(0);
+    piece = piece.charAt(1);
 
     if (colour != turn)
-        return 'snapback';
+        return false;
 
     // every move must be a capture
-    if (!(to in oldpos))
-        return 'snapback';
+    if (!(to in position))
+        return false;
 
     // must capture a piece of opposite colour
-    var captured = oldpos[to];
+    var captured = position[to];
     var capturedcolour = captured.charAt(0);
     var capturedpiece = captured.charAt(1);
     if (capturedcolour == colour)
-        return 'snapback';
+        return false;
 
     // can't capture white king
     if (capturedcolour == 'w' && capturedpiece == 'K')
-        return 'snapback';
+        return false;
 
     // now validate the actual move mechanics
     var fromfile = from.charCodeAt(0) - 'a'.charCodeAt(0);
@@ -53,7 +68,7 @@ function piece_moved(from, to, piece, newpos, oldpos, orientation) {
         var r = fromrank + rdir;
         while (f != tofile || r != torank) {
             var tile = String.fromCharCode(f + 'a'.charCodeAt(0)) + String.fromCharCode(r + '1'.charCodeAt(0));
-            if (tile in oldpos)
+            if (tile in position)
                 jumpedover = true;
             f += fdir;
             r += rdir;
@@ -63,35 +78,30 @@ function piece_moved(from, to, piece, newpos, oldpos, orientation) {
     // king
     if (piece == 'K') {
         if (movefile > 1 || moverank > 1)
-            return 'snapback';
+            return false;
     }
     // queen
     if (piece == 'Q') {
         if (jumpedover || (movefile != 0 && moverank != 0 && movefile != moverank))
-            return 'snapback';
+            return false;
     }
     // rook
     if (piece == 'R') {
         if (jumpedover || (movefile != 0 && moverank != 0))
-            return 'snapback';
+            return false;
     }
     // bishop
     if (piece == 'B') {
-        // TODO: can't move through other pieces
         if (jumpedover || movefile != moverank)
-            return 'snapback';
+            return false;
     }
     // knight
     if (piece == 'N') {
         if (!((movefile == 2 && moverank == 1) || (movefile == 1 && moverank == 2)))
-            return 'snapback';
+            return false;
     }
 
-    // other colour's turn now
-    turn = other[turn];
-
-    // TODO: detect end of game (either white king is the only piece, or there are no legal
-    // moves)
+    return true;
 }
 
 init_puzzle();
