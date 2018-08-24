@@ -32,6 +32,19 @@ function render() {
     } else {
         $('#whatdo').text("Move a " + player[turn] + " piece.");
     }
+
+    if (autosolving) {
+        $('#solve').prop('disabled', true);
+        $('#init').prop('disabled', true);
+        $('#hint').prop('disabled', true);
+        $('#reset').prop('disabled', true);
+        $('#whatdo').html("&nbsp;");
+    } else {
+        $('#solve').prop('disabled', false);
+        $('#init').prop('disabled', false);
+        $('#hint').prop('disabled', false);
+        $('#reset').prop('disabled', false);
+    }
 }
 
 // https://stackoverflow.com/a/6274398
@@ -106,6 +119,16 @@ function dfs(position) {
     };
 }
 
+function hint() {
+    var r = dfs(board.position());
+    if (!r.solved) {
+        $('#whatdo').text("Not solvable!");
+        return;
+    }
+
+    showNextMove([r.moves[0]]);
+}
+
 function solve() {
     var r = dfs(board.position());
     if (!r.solved) {
@@ -113,12 +136,8 @@ function solve() {
         return;
     }
 
-    $('#solve').prop('disabled', true);
-    $('#init').prop('disabled', true);
-    $('#reset').prop('disabled', true);
-    $('#whatdo').html("&nbsp;");
-
     autosolving = true;
+    render();
 
     window.setTimeout(function() {
         showNextMove(r.moves);
@@ -129,15 +148,13 @@ function showNextMove(moves) {
     if (moves.length > 0) {
         var m = moves.shift();
         board.move(m);
+        turn = other[turn];
         window.setTimeout(function() {
             showNextMove(moves);
         }, 500);
     } else {
-        render();
-        $('#solve').prop('disabled', false);
-        $('#init').prop('disabled', false);
-        $('#reset').prop('disabled', false);
         autosolving = false;
+        render();
     }
 }
 
@@ -262,6 +279,10 @@ function legal_move(position, from, to) {
 
 $('#solve').click(function() {
     solve();
+});
+
+$('#hint').click(function() {
+    hint();
 });
 
 $('#init').click(function() {
