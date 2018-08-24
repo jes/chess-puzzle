@@ -11,6 +11,8 @@ var turn;
 var startedwith;
 var autosolving = false;
 
+var positions = {};
+
 function init_puzzle() {
     var pieces = "KkQqRRrrBBbbNNnn".split("");
     pieces = shuffle(pieces);
@@ -22,7 +24,17 @@ function init_puzzle() {
     }
     startedwith = fen;
     board.position(fen);
+    positions = [board.position()];
     turn = 'w';
+    render();
+}
+
+function undo_move() {
+    if (positions.length <= 1)
+        return;
+    positions.pop();
+    board.position(positions[positions.length-1]);
+    turn = other[turn];
     render();
 }
 
@@ -37,12 +49,14 @@ function render() {
         $('#solve').prop('disabled', true);
         $('#init').prop('disabled', true);
         $('#hint').prop('disabled', true);
+        $('#undo').prop('disabled', true);
         $('#reset').prop('disabled', true);
         $('#whatdo').html("&nbsp;");
     } else {
         $('#solve').prop('disabled', false);
         $('#init').prop('disabled', false);
         $('#hint').prop('disabled', false);
+        $('#undo').prop('disabled', false);
         $('#reset').prop('disabled', false);
     }
 }
@@ -147,6 +161,7 @@ function solve() {
 function showNextMove(moves) {
     var m = moves.shift();
     board.move(m);
+    positions.push(board.position());
     turn = other[turn];
 
     if (moves.length > 0) {
@@ -191,6 +206,7 @@ function piece_moved(from, to, piece, newpos, oldpos, orientation) {
 
     // other colour's turn now
     turn = other[turn];
+    positions.push(newpos);
     render();
 }
 
@@ -288,6 +304,10 @@ $('#hint').click(function() {
 
 $('#init').click(function() {
     init_puzzle();
+});
+
+$('#undo').click(function() {
+    undo_move();
 });
 
 $('#reset').click(function() {
