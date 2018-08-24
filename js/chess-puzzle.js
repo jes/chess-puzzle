@@ -145,10 +145,11 @@ function solve() {
 }
 
 function showNextMove(moves) {
+    var m = moves.shift();
+    board.move(m);
+    turn = other[turn];
+
     if (moves.length > 0) {
-        var m = moves.shift();
-        board.move(m);
-        turn = other[turn];
         window.setTimeout(function() {
             showNextMove(moves);
         }, 500);
