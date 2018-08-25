@@ -314,6 +314,21 @@ $('#undo').click(function() {
 
 $('#load').click(function() {
     board.position($('#fen').val());
+    var pos = board.position();
+    var count = {'w': 0, 'b': 0};
+    for (var tile in pos) {
+        var piece = pos[tile];
+        var colour = piece.charAt(0);
+        count[colour]++;
+    }
+
+    if (count['w'] == count['b']) {
+        turn = 'w';
+    } else {
+        turn ='b';
+    }
+
+    render();
 });
 
 $('#reset').click(function() {
