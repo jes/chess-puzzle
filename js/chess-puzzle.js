@@ -9,7 +9,6 @@ var board = ChessBoard('board', {
 var other = { 'w': 'b', 'b': 'w' };
 var player = { 'w':'white', 'b':'black' };
 var turn;
-var startedwith;
 var autosolving = false;
 
 var positions = {};
@@ -23,7 +22,6 @@ function init_puzzle() {
             fen += '/';
         fen += pieces[i];
     }
-    startedwith = fen;
     board.position(fen);
     positions = [board.position()];
     turn = 'w';
@@ -90,6 +88,27 @@ function dfs(position) {
         return {
             moves: [],
             solved: true,
+        };
+    }
+
+    // count pieces to see if the position is solvable
+    var count = {'w': 0, 'b': 0};
+    var piececount = {};
+    for (var tile in position) {
+        var piece = position[tile];
+        var colour = piece.charAt(0);
+        count[colour]++;
+        if (!(position[tile] in piececount))
+            piececount[position[tile]] = 0;
+        piececount[position[tile]]++;
+    }
+    if ((count['w'] == count['b']+1 && turn == 'w')
+            || (count['w'] == count['b'] && turn == 'b')
+            || (count['w'] > count['b']+1)
+            || (count['b'] > count['w'])
+            || (piececount['wK'] != 1)) {
+        return {
+            solved: false,
         };
     }
 
@@ -328,11 +347,14 @@ $('#load').click(function() {
         turn ='b';
     }
 
+    positions = [board.position()];
+
     render();
 });
 
 $('#reset').click(function() {
-    board.position(startedwith);
+    board.position(positions[0]);
+    positions = [positions[0]];
     turn = 'w';
     render();
 });
