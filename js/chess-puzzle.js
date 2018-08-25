@@ -2,6 +2,7 @@ var board = ChessBoard('board', {
     draggable: true,
     onDrop: piece_moved,
     onDragStart: drag_start,
+    onSnapEnd: render,
     showNotation: false,
 });
 
@@ -44,6 +45,8 @@ function render() {
     } else {
         $('#whatdo').text("Move a " + player[turn] + " piece.");
     }
+
+    $('#fen').val(board.fen());
 
     if (autosolving) {
         $('#solve').prop('disabled', true);
@@ -207,7 +210,6 @@ function piece_moved(from, to, piece, newpos, oldpos, orientation) {
     // other colour's turn now
     turn = other[turn];
     positions.push(newpos);
-    render();
 }
 
 function legal_move(position, from, to) {
@@ -308,6 +310,10 @@ $('#init').click(function() {
 
 $('#undo').click(function() {
     undo_move();
+});
+
+$('#load').click(function() {
+    board.position($('#fen').val());
 });
 
 $('#reset').click(function() {
