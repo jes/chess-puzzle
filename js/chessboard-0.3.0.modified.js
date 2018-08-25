@@ -167,7 +167,7 @@ function objToFen(obj) {
       }
     }
 
-    if (i !== 7) {
+    if (i !== 3) {
       fen += '/';
     }
 
