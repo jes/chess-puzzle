@@ -4,6 +4,7 @@ import (
     "fmt"
     "strings"
     "math/rand"
+    "time"
 )
 
 const (
@@ -54,6 +55,8 @@ func main() {
     solved := 0
     played := 0
 
+    start := time.Now()
+
     for {
         puzzle := init_puzzle()
 
@@ -67,7 +70,8 @@ func main() {
         played++
 
         if played % 100000 == 0 {
-            fmt.Println("Solved ", solved, " out of ", played, " in some ms")
+            elapsed := time.Since(start)
+            fmt.Println("Solved ", solved, " out of ", played, " in ", elapsed)
         }
     }
 }
