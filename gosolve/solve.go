@@ -61,13 +61,13 @@ func main() {
         if solvable {
             solved++
         } else {
-            fmt.Println(puzzle.fen())
+            fmt.Println("Unsolvable: ", puzzle.fen())
         }
 
         played++
 
         if played % 100000 == 0 {
-            fmt.Println("Solved ", solved, " out of ", played, " in some ms\n")
+            fmt.Println("Solved ", solved, " out of ", played, " in some ms")
         }
     }
 }
@@ -237,11 +237,6 @@ func (p *Puzzle) dfs() bool {
             if solvable {
                 //fmt.Println("TRUE")
                 return true
-            }
-
-            // how many turns had been played before this level of recursion
-            if p.turns < 2 {
-                return false
             }
         }
     }
